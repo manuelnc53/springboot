@@ -25,7 +25,9 @@ public class UsuariosService {
     public Optional<UsuariosModel> obtenerPorId(Long id){
         return usuarioRepository.findById(id);
     }
-
+    public float obtenerSaldo(Long id){
+        return usuarioRepository.obtenerSaldo(id);
+    }
 
     public boolean eliminarUsuario(Long id) {
         try{

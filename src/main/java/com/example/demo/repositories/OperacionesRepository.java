@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OperacionesRepository extends CrudRepository<OperacionesModel, Long> {
-
+    
 }

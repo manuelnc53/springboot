@@ -8,6 +8,7 @@ import com.example.demo.models.BilleterasModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.repositories.BilleterasRepository;
+import java.util.List;
 
 @Service
 public class BilleterasService {
@@ -26,7 +27,9 @@ public class BilleterasService {
         return billeteraRepository.findById(id);
     }
 
-
+    public float obtenerSaldo(Long id){
+        return billeteraRepository.obtenerSaldo(id);
+    }
     public boolean eliminarBilletera(Long id) {
         try{
             billeteraRepository.deleteById(id);

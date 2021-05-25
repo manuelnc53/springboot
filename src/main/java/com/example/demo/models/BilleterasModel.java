@@ -13,9 +13,6 @@ public class BilleterasModel {
     @Column(unique = true, nullable = false, name="id")
     private Long id;
     
-    @Column(name="saldo")
-    private float saldo;
-    
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private UsuariosModel usuario;

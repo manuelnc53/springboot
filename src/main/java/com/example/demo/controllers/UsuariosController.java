@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.example.demo.models.UsuariosModel;
 import com.example.demo.services.UsuariosService;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,15 @@ public class UsuariosController {
     public Optional<UsuariosModel> obtenerUsuarioPorId(@PathVariable("id") Long id) {
         return this.usuarioService.obtenerPorId(id);
     }
-
+    @GetMapping( path = "/{id}/saldo")
+    public Map<String, Object> obtenerSaldo(@PathVariable("id") Long id) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("saldo", this.usuarioService.obtenerSaldo(id));
+        return map;
+    }
+    
+    
+    
     @DeleteMapping( path = "/{id}")
     public String eliminarPorId(@PathVariable("id") Long id){
         boolean ok = this.usuarioService.eliminarUsuario(id);

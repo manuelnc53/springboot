@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import com.example.demo.models.BilleteraDivisaModel;
 import com.example.demo.services.BilleteraDivisaService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,35 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/billeteradivisa")
 public class BilleteraDivisaController {
     @Autowired
-    BilleteraDivisaService billeteradivisaService;
-
-    @GetMapping()
-    public ArrayList<BilleteraDivisaModel> obtenerBilleteraDivisa(){
-        return billeteradivisaService.obtenerBilleteraDivisa();
-    }
+    BilleteraDivisaService billeteraService;
 
     @PostMapping()
-    public BilleteraDivisaModel guardarBilleteraDivisa(@RequestBody BilleteraDivisaModel billeteradivisa){
-        return this.billeteradivisaService.guardarBilleteraDivisa(billeteradivisa);
+    public BilleteraDivisaModel guardarBilleteraDivisa(@RequestBody BilleteraDivisaModel billeteraDivisa){
+        return this.billeteraService.guardarBilleteraDivisa(billeteraDivisa);
     }
-    @PutMapping()
-    public BilleteraDivisaModel editarBilleteraDivisa(@RequestBody BilleteraDivisaModel billeteradivisa){
-        return this.billeteradivisaService.guardarBilleteraDivisa(billeteradivisa);
-    }
-
-    @GetMapping( path = "/{id}")
-    public Optional<BilleteraDivisaModel> obtenerBilleteraDivisaPorId(@PathVariable("id") Long id) {
-        return this.billeteradivisaService.obtenerPorId(id);
-    }
-
-    @DeleteMapping( path = "/{id}")
-    public String eliminarPorId(@PathVariable("id") Long id){
-        boolean ok = this.billeteradivisaService.eliminarBilleteraDivisa(id);
-        if (ok){
-            return "Se eliminó el billeteradivisa con id " + id;
-        }else{
-            return "No pudo eliminar el billeteradivisa con id" + id;
-        }
-    }
+    
+    
 
 }
