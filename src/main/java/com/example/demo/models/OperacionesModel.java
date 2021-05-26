@@ -15,9 +15,6 @@ public class OperacionesModel {
     @Column(name="fecha")
     private Date fecha;
     
-    @Column(name="tipo")
-    private String tipo;
-    
     @ManyToOne
     @JoinColumn(name = "id_billetera_origen")
     private BilleterasModel billeteraOrigen;
@@ -34,9 +31,9 @@ public class OperacionesModel {
     @JoinColumn(name = "id_divisa_destino")
     private DivisasModel divisaDestino;
     
-    @Column(name="monto_origen")
-    private float montoOrigen;
+    @Column(name="cantidad_origen")
+    private int cantidadOrigen;
     
-    @Column(name="monto_destino")
-    private float montoDestino;
+    @Column(name="cantidad_destino")
+    private int cantidadDestino;
 }
