@@ -20,8 +20,16 @@ public class BilleteraDivisaController {
     BilleteraDivisaService billeteraService;
 
     @PostMapping()
-    public BilleteraDivisaModel guardarBilleteraDivisa(@RequestBody BilleteraDivisaModel billeteraDivisa){
-        return this.billeteraService.guardarBilleteraDivisa(billeteraDivisa);
+    public Map<String, Object> guardarBilleteraDivisa(@RequestBody BilleteraDivisaModel billeteraDivisa){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.billeteraService.guardarBilleteraDivisa(billeteraDivisa);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     

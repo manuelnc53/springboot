@@ -15,6 +15,10 @@ public class DivisasModel {
     @Column(name="nombre")
     private String nombre;
     
+    @Column(name="estado", columnDefinition = "enum('ACTIVO','INACTIVO')")
+    @Enumerated(EnumType.STRING)
+    private EstadoModel estado;
+    
     @Column(name="valor")
     private float valor;
 }

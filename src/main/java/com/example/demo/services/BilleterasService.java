@@ -20,6 +20,11 @@ public class BilleterasService {
     }
 
     public BilleterasModel guardarBilletera(BilleterasModel billetera){
+        /** EN CASO DE QUE LA BILLETERA NO EXISTA
+        if(billetera.getId()>0){
+            billetera = this.obtenerPorId(billetera.getId()).get();
+        }**/
+        
         return billeteraRepository.save(billetera);
     }
 

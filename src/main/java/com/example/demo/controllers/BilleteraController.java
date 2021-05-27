@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.example.demo.models.BilleterasModel;
 import com.example.demo.services.BilleterasService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,40 +21,85 @@ public class BilleteraController {
     BilleterasService billeteraService;
 
     @GetMapping()
-    public ArrayList<BilleterasModel> obtenerBilleteras(){
-        return billeteraService.obtenerBilleteras();
+    public Map<String, Object> obtenerBilleteras(){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data", billeteraService.obtenerBilleteras());
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
 
     @PostMapping()
-    public BilleterasModel guardarDivisa(@RequestBody BilleterasModel billetera){
-        return this.billeteraService.guardarBilletera(billetera);
+    public Map<String, Object> guardarDivisa(@RequestBody BilleterasModel billetera){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.billeteraService.guardarBilletera(billetera);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     @PutMapping()
-    public BilleterasModel editarDivisa(@RequestBody BilleterasModel billetera){
-        return this.billeteraService.guardarBilletera(billetera);
+    public Map<String, Object> editarDivisa(@RequestBody BilleterasModel billetera){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.billeteraService.guardarBilletera(billetera);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     @GetMapping( path = "/{id}")
-    public Optional<BilleterasModel> obtenerDivisaPorId(@PathVariable("id") Long id) {
-        return this.billeteraService.obtenerPorId(id);
+    public Map<String, Object> obtenerDivisaPorId(@PathVariable("id") Long id) {
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data", this.billeteraService.obtenerPorId(id));
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     @GetMapping( path = "/{id}/saldo")
     public Map<String, Object> obtenerSaldo(@PathVariable("id") Long id) {
+        
         HashMap<String, Object> map = new HashMap<>();
-        map.put("saldo", this.billeteraService.obtenerSaldo(id));
+        try{
+            map.put("data", new HashMap<String, Object>().put("saldo", this.billeteraService.obtenerSaldo(id)));
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
         return map;
     }
     
     @DeleteMapping( path = "/{id}")
-    public String eliminarPorId(@PathVariable("id") Long id){
-        boolean ok = this.billeteraService.eliminarBilletera(id);
-        if (ok){
-            return "Se eliminó el billetera con id " + id;
-        }else{
-            return "No pudo eliminar el billetera con id" + id;
+    public Map<String, Object> eliminarPorId(@PathVariable("id") Long id){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.billeteraService.eliminarBilletera(id);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
         }
+        return map;
     }
 
 }

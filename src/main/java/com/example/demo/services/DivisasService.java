@@ -32,6 +32,7 @@ public class DivisasService {
             divisasRepository.deleteById(id);
             return true;
         }catch(Exception err){
+            System.out.println(err);
             return false;
         }
     }

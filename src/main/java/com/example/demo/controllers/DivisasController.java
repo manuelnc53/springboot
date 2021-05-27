@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import com.example.demo.models.DivisasModel;
 import com.example.demo.services.DivisasService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,33 +20,71 @@ public class DivisasController {
     DivisasService divisasService;
 
     @GetMapping()
-    public ArrayList<DivisasModel> obtenerDivisas(){
-        return divisasService.obtenerDivisas();
+    public Map<String, Object> obtenerDivisas(){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data",divisasService.obtenerDivisas());
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
 
     @PostMapping()
-    public DivisasModel guardarDivisa(@RequestBody DivisasModel divisas){
-        return this.divisasService.guardarDivisa(divisas);
+    public Map<String, Object> guardarDivisa(@RequestBody DivisasModel divisas){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.divisasService.guardarDivisa(divisas);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     @PutMapping()
-    public DivisasModel editarDivisa(@RequestBody DivisasModel divisas){
-        return this.divisasService.guardarDivisa(divisas);
+    public Map<String, Object> editarDivisa(@RequestBody DivisasModel divisas){
+         HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.divisasService.guardarDivisa(divisas);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
 
     @GetMapping( path = "/{id}")
-    public Optional<DivisasModel> obtenerDivisaPorId(@PathVariable("id") Long id) {
-        return this.divisasService.obtenerPorId(id);
+    public Map<String, Object> obtenerDivisaPorId(@PathVariable("id") Long id) {
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data", this.divisasService.obtenerPorId(id));
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
 
     @DeleteMapping( path = "/{id}")
-    public String eliminarPorId(@PathVariable("id") Long id){
-        boolean ok = this.divisasService.eliminarDivisa(id);
-        if (ok){
-            return "Se eliminó el divisas con id " + id;
-        }else{
-            return "No pudo eliminar el divisas con id" + id;
+    public Map<String, Object> eliminarPorId(@PathVariable("id") Long id){
+        
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.divisasService.eliminarDivisa(id);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
         }
+        return map;
     }
 
 }

@@ -34,6 +34,9 @@ public class UsuariosModel {
     @Column(name="telefono")
     private String telefono;
     
+    @Column(name="estado", columnDefinition = "enum('ACTIVO','INACTIVO')")
+    @Enumerated(EnumType.STRING)
+    private EstadoModel estado;
     /**@OneToMany(targetEntity=BilleterasModel.class, mappedBy="usuario",cascade=CascadeType.ALL, fetch = FetchType.LAZY)    
     private List<BilleterasModel> billeteras = new ArrayList<>();
     * **/

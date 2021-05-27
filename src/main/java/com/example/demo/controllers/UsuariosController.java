@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.example.demo.models.UsuariosModel;
 import com.example.demo.services.UsuariosService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,42 +20,89 @@ public class UsuariosController {
     UsuariosService usuarioService;
 
     @GetMapping()
-    public ArrayList<UsuariosModel> obtenerUsuarios(){
-        return usuarioService.obtenerUsuarios();
+    public Map<String, Object> obtenerUsuarios(){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data", usuarioService.obtenerUsuarios());
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
 
     @PostMapping()
-    public UsuariosModel guardarUsuario(@RequestBody UsuariosModel usuario){
-        return this.usuarioService.guardarUsuario(usuario);
+    public Map<String, Object> guardarUsuario(@RequestBody UsuariosModel usuario){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.usuarioService.guardarUsuario(usuario);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     
     @PutMapping()
-    public UsuariosModel editarUsuario(@RequestBody UsuariosModel usuario){
-        return this.usuarioService.guardarUsuario(usuario);
+    public Map<String, Object> editarUsuario(@RequestBody UsuariosModel usuario){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.usuarioService.guardarUsuario(usuario);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     
     @GetMapping( path = "/{id}")
-    public Optional<UsuariosModel> obtenerUsuarioPorId(@PathVariable("id") Long id) {
-        return this.usuarioService.obtenerPorId(id);
+    public Map<String, Object> obtenerUsuarioPorId(@PathVariable("id") Long id) {
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            map.put("data", this.usuarioService.obtenerPorId(id));
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
     }
     @GetMapping( path = "/{id}/saldo")
     public Map<String, Object> obtenerSaldo(@PathVariable("id") Long id) {
+        
         HashMap<String, Object> map = new HashMap<>();
-        map.put("saldo", this.usuarioService.obtenerSaldo(id));
+        try{
+            map.put("data", new HashMap<String, Object>().put("saldo", this.usuarioService.obtenerSaldo(id)));
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("data", new ObjectMapper());
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
         return map;
     }
     
     
     
     @DeleteMapping( path = "/{id}")
-    public String eliminarPorId(@PathVariable("id") Long id){
-        boolean ok = this.usuarioService.eliminarUsuario(id);
-        if (ok){
-            return "Se eliminó el usuario con id " + id;
-        }else{
-            return "No pudo eliminar el usuario con id" + id;
+    public Map<String, Object> eliminarPorId(@PathVariable("id") Long id){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            this.usuarioService.eliminarUsuario(id);
+            map.put("status",200);
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
         }
+        return map;
+        
+        
     }
 
 }

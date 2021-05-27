@@ -13,6 +13,10 @@ public class BilleterasModel {
     @Column(unique = true, nullable = false, name="id")
     private Long id;
     
+    @Column(name="estado", columnDefinition = "enum('ACTIVO','INACTIVO')")
+    @Enumerated(EnumType.STRING)
+    private EstadoModel estado;
+    
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private UsuariosModel usuario;
