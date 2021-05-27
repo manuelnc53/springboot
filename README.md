@@ -20,7 +20,7 @@ Coloque su nombre de usuario y contraseña de su base de datos local o remota.
 
 - Ejecutar los scripts creacion\_db.sql y carga\_db.sql en la consola de MySQL Server (Se puede usar un software cómo MySql Workbench)
 - Entrar a la consola de Windows y ejecutar el siguiente comando
-  - cmd spring-boot:run
+  - mvnw.cmd spring-boot:run
 
 - Probar funcionalidades con Postman [https://www.getpostman.com/collections/58252559b1c9bc5d2adb](https://www.getpostman.com/collections/58252559b1c9bc5d2adb)
 
