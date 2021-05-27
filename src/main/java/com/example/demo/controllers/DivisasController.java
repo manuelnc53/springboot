@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.example.demo.models.DivisasModel;
+import com.example.demo.models.EstadoModel;
 import com.example.demo.services.DivisasService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class DivisasController {
             map.put("data",divisasService.obtenerDivisas());
             map.put("status",200);
         }catch(Exception e){
-            map.put("data", new ObjectMapper());
+           
             map.put("status",400);
             map.put("error", "Error inesperado");
         }
@@ -37,6 +38,7 @@ public class DivisasController {
     public Map<String, Object> guardarDivisa(@RequestBody DivisasModel divisas){
         HashMap<String, Object> map = new HashMap<>();
         try{
+            divisas.setEstado(EstadoModel.ACTIVO);
             this.divisasService.guardarDivisa(divisas);
             map.put("status",200);
         }catch(Exception e){
@@ -49,6 +51,7 @@ public class DivisasController {
     @PutMapping()
     public Map<String, Object> editarDivisa(@RequestBody DivisasModel divisas){
          HashMap<String, Object> map = new HashMap<>();
+         divisas.setEstado(EstadoModel.ACTIVO);
         try{
             this.divisasService.guardarDivisa(divisas);
             map.put("status",200);
@@ -63,10 +66,15 @@ public class DivisasController {
     public Map<String, Object> obtenerDivisaPorId(@PathVariable("id") Long id) {
         HashMap<String, Object> map = new HashMap<>();
         try{
-            map.put("data", this.divisasService.obtenerPorId(id));
-            map.put("status",200);
+            Optional<DivisasModel> divisa =this.divisasService.obtenerPorId(id);
+            if(divisa.isPresent()){
+                map.put("data", divisa.get());
+                map.put("status",200);
+            }else{
+                map.put("status",400);
+                map.put("error", "No existe esa divisa");
+            }
         }catch(Exception e){
-            map.put("data", new ObjectMapper());
             map.put("status",400);
             map.put("error", "Error inesperado");
         }
@@ -78,8 +86,15 @@ public class DivisasController {
         
         HashMap<String, Object> map = new HashMap<>();
         try{
-            this.divisasService.eliminarDivisa(id);
-            map.put("status",200);
+            Optional<DivisasModel> divisa =this.divisasService.obtenerPorId(id);
+            if(divisa.isPresent()){
+                this.divisasService.eliminarDivisa(id);
+                map.put("status",200);
+            }else{
+                map.put("status",400);
+                map.put("error", "No existe esa divisa");
+            }
+            
         }catch(Exception e){
             map.put("status",400);
             map.put("error", "Error inesperado");

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.example.demo.models.BilleterasModel;
+import com.example.demo.models.EstadoModel;
 import com.example.demo.services.BilleterasService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ public class BilleteraController {
             map.put("data", billeteraService.obtenerBilleteras());
             map.put("status",200);
         }catch(Exception e){
-            map.put("data", new ObjectMapper());
             map.put("status",400);
             map.put("error", "Error inesperado");
         }
@@ -38,6 +38,7 @@ public class BilleteraController {
     public Map<String, Object> guardarDivisa(@RequestBody BilleterasModel billetera){
         HashMap<String, Object> map = new HashMap<>();
         try{
+            billetera.setEstado(EstadoModel.ACTIVO);
             this.billeteraService.guardarBilletera(billetera);
             map.put("status",200);
         }catch(Exception e){
@@ -50,6 +51,7 @@ public class BilleteraController {
     @PutMapping()
     public Map<String, Object> editarDivisa(@RequestBody BilleterasModel billetera){
         HashMap<String, Object> map = new HashMap<>();
+        billetera.setEstado(EstadoModel.ACTIVO);
         try{
             this.billeteraService.guardarBilletera(billetera);
             map.put("status",200);
@@ -64,10 +66,16 @@ public class BilleteraController {
     public Map<String, Object> obtenerDivisaPorId(@PathVariable("id") Long id) {
         HashMap<String, Object> map = new HashMap<>();
         try{
-            map.put("data", this.billeteraService.obtenerPorId(id));
-            map.put("status",200);
+            Optional<BilleterasModel> billetera = this.billeteraService.obtenerPorId(id);
+            if(billetera.isPresent()){
+                map.put("data", billetera.get());
+                map.put("status",200);
+            }else{
+                map.put("status",400);
+                map.put("error", "No existe esa billetera");
+            }
+            
         }catch(Exception e){
-            map.put("data", new ObjectMapper());
             map.put("status",400);
             map.put("error", "Error inesperado");
         }
@@ -79,8 +87,17 @@ public class BilleteraController {
         
         HashMap<String, Object> map = new HashMap<>();
         try{
-            map.put("data", new HashMap<String, Object>().put("saldo", this.billeteraService.obtenerSaldo(id)));
-            map.put("status",200);
+            Optional<BilleterasModel> billetera = this.billeteraService.obtenerPorId(id);
+            if(billetera.isPresent()){
+                HashMap saldo = new HashMap<String, Object>();
+                saldo.put("saldo", this.billeteraService.obtenerSaldo(id));
+                map.put("data", saldo);
+                map.put("status",200);
+            }else{
+                map.put("status",400);
+                map.put("error", "No existe esa billetera");
+            }
+            
         }catch(Exception e){
             map.put("data", new ObjectMapper());
             map.put("status",400);
@@ -93,8 +110,15 @@ public class BilleteraController {
     public Map<String, Object> eliminarPorId(@PathVariable("id") Long id){
         HashMap<String, Object> map = new HashMap<>();
         try{
-            this.billeteraService.eliminarBilletera(id);
-            map.put("status",200);
+            Optional<BilleterasModel> billetera = this.billeteraService.obtenerPorId(id);
+            if(billetera.isPresent()){
+                this.billeteraService.eliminarBilletera(id);
+                map.put("status",200);
+            }else{
+                map.put("status",400);
+                map.put("error", "No existe esa billetera");
+            }
+            
         }catch(Exception e){
             map.put("status",400);
             map.put("error", "Error inesperado");

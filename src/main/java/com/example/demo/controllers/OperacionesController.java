@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.example.demo.models.OperacionesModel;
+import com.example.demo.models.TipoOperacion;
 import com.example.demo.services.BilleteraDivisaService;
 import com.example.demo.services.BilleterasService;
 import com.example.demo.services.DivisasService;
 import com.example.demo.services.OperacionesService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +36,8 @@ public class OperacionesController {
     BilleteraDivisaService billeteraDivisaService;
     
     
-    @PostMapping()
-    public Map<String, Object> guardarOperacion(@RequestBody OperacionesModel operaciones){
+    @PostMapping(path = "/intercambio")
+    public Map<String, Object> guardarIntercambio(@RequestBody OperacionesModel operaciones){
         HashMap<String, Object> map = new HashMap<>();
         try{
             //Control de billeteras y divisas
@@ -82,7 +84,7 @@ public class OperacionesController {
                 if(Math.round(cantidadDestino)==0 || operaciones.getCantidadOrigen()==0){
                     map.put("status",400);
                     map.put("error", "No se aceptan cantidades iguales a cero.");
-                }else if(cantidadDestino == Math.round(cantidadDestino) ){
+                }else if(cantidadDestino != Math.round(cantidadDestino) ){
                     map.put("status",400);
                     map.put("error", "Las cantidades de intercambio no son correctas (no son multiplos).");
                 }else if(countOrigen<operaciones.getCantidadOrigen()){
@@ -103,13 +105,15 @@ public class OperacionesController {
                             billeteradivisaDestino.get(i).setBilletera(operaciones.getBilleteraOrigen());
                             billeteraDivisaService.guardarBilleteraDivisa(billeteradivisaDestino.get(i));
                         }
+                        operaciones.setFecha(new Date());
+                        operaciones.setTipo(TipoOperacion.INTERCAMBIO);
                         operacionesService.guardarOperacion(operaciones);
                         
                         map.put("status",200);
                 }
             }
         }catch(Exception e){
-            System.out.println(e);
+            
              map.put("status",400);
              map.put("error", "Error inesperado");
         }
@@ -117,6 +121,50 @@ public class OperacionesController {
         //return this.operacionesService.guardarOperacion(body);
     }
     
-    
-
+    @PostMapping(path = "/deposito")
+    public Map<String, Object> guardarDeposito(@RequestBody OperacionesModel operaciones){
+        HashMap<String, Object> map = new HashMap<>();
+        try{
+            //Control de billeteras y divisas
+            boolean boolBilleteraDivisa = true;
+            Optional<BilleterasModel> bAuxOrigen=billeterasService.obtenerPorId(operaciones.getBilleteraOrigen().getId());
+            Optional<DivisasModel> dAuxOrigen=divisasService.obtenerPorId(operaciones.getDivisaOrigen().getId());
+            
+            //VERIFICACION DE BILLETERAS
+            if(!bAuxOrigen.isPresent()){
+                map.put("status",400);
+                map.put("error", "La billetera de origen no existe.");
+                boolBilleteraDivisa=false;
+            }else if(!dAuxOrigen.isPresent()){
+                map.put("status",400);
+                map.put("error", "La divisa de origen no existe.");
+                boolBilleteraDivisa=false;
+            }else{
+                operaciones.setDivisaOrigen(dAuxOrigen.get());
+                operaciones.setBilleteraOrigen(bAuxOrigen.get());
+            }
+            if(boolBilleteraDivisa){
+                if(operaciones.getCantidadOrigen()<1){
+                    map.put("status",400);
+                    map.put("error", "Especifique una cantidad correcta de divisas a depositar.");
+                }else{
+                    for(int i=0; i< operaciones.getCantidadOrigen(); i++){
+                            BilleteraDivisaModel billeteraDivisa = new BilleteraDivisaModel();
+                            billeteraDivisa.setBilletera(operaciones.getBilleteraOrigen());
+                            billeteraDivisa.setDivisa(operaciones.getDivisaOrigen());
+                            billeteraDivisaService.guardarBilleteraDivisa(billeteraDivisa);
+                    }
+                    operaciones.setFecha(new Date());
+                    operaciones.setTipo(TipoOperacion.DEPOSITO);
+                    operacionesService.guardarOperacion(operaciones);
+                    map.put("status",200);
+                }
+            
+            }
+        }catch(Exception e){
+            map.put("status",400);
+            map.put("error", "Error inesperado");
+        }
+        return map;
+    }
 }

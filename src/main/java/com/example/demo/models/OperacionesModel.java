@@ -15,6 +15,10 @@ public class OperacionesModel {
     @Column(name="fecha")
     private Date fecha;
     
+    @Column(name="tipo", columnDefinition = "enum('INTERCAMBIO','DEPOSITO')")
+    @Enumerated(EnumType.STRING)
+    private TipoOperacion tipo;
+    
     @ManyToOne
     @JoinColumn(name = "id_billetera_origen")
     private BilleterasModel billeteraOrigen;
